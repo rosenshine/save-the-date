@@ -42,14 +42,20 @@ SaveTheDate.GameState = {
     if(this.game.input.activePointer.isDown){
       //X
       var targetX = this.game.input.activePointer.position.x;
-      // let farEnoughX = if this.player.body.center.x
+      let playerX = this.player.body.center.x;
+      let xDiff = targetX > playerX ? targetX - playerX : playerX - targetX;
       var directionX = targetX >= this.player.body.center.x ? 1 : -1;
-      this.player.body.velocity.x = directionX * this.PLAYER_SPEED;
-
+      if (xDiff > 25) {
+        this.player.body.velocity.x = directionX * this.PLAYER_SPEED;
+      }
       //Y
       var targetY = this.game.input.activePointer.position.y;
+      let playerY = this.player.body.center.y;
+      let yDiff = targetY > playerY ? targetY - playerY : playerY - targetY;
       var directionY = targetY >= this.player.body.center.y ? 1 : -1;
-      this.player.body.velocity.y = directionY * this.PLAYER_SPEED;
+      if (yDiff > 25){
+        this.player.body.velocity.y = directionY * this.PLAYER_SPEED;
+      }
     }
   }
 };
