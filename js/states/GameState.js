@@ -28,6 +28,8 @@ SaveTheDate.GameState = {
     //player
     this.player = this.add.sprite(this.game.world.width * .15, this.game.world.centerY, 'sarah');
     this.player.anchor.setTo(0.5);
+    this.player.scale.x = 0.5;
+    this.player.scale.y = 0.5;
     this.game.physics.arcade.enable(this.player);
     this.player.body.collideWorldBounds = true;
     //     this.player.anchor.setTo(0.5);
@@ -35,13 +37,19 @@ SaveTheDate.GameState = {
     //     this.player.body.collideWorldBounds = true;
   },
   update: function(){
+    this.player.body.velocity.x = 0;
     this.player.body.velocity.y = 0;
     if(this.game.input.activePointer.isDown){
+      //X
+      var targetX = this.game.input.activePointer.position.x;
+      // let farEnoughX = if this.player.body.center.x
+      var directionX = targetX >= this.player.body.center.x ? 1 : -1;
+      this.player.body.velocity.x = directionX * this.PLAYER_SPEED;
+
+      //Y
       var targetY = this.game.input.activePointer.position.y;
-
-      var direction = targetY >= this.player.body.center.y ? 1 : -1;
-
-      this.player.body.velocity.y = direction * this.PLAYER_SPEED;
+      var directionY = targetY >= this.player.body.center.y ? 1 : -1;
+      this.player.body.velocity.y = directionY * this.PLAYER_SPEED;
     }
   }
 };
