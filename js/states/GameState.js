@@ -57,6 +57,10 @@ SaveTheDate.GameState = {
         this.player.body.velocity.y = directionY * this.PLAYER_SPEED;
       }
     }
+    if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) { this.player.body.velocity.x = -1 * this.PLAYER_SPEED }
+    if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) { this.player.body.velocity.x = 1 * this.PLAYER_SPEED }
+    if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) { this.player.body.velocity.y = -1 * this.PLAYER_SPEED }
+    if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) { this.player.body.velocity.y = 1 * this.PLAYER_SPEED }
   }
 };
 //
