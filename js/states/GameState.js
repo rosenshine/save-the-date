@@ -8,6 +8,9 @@ SaveTheDate.GameState = {
 
     this.scale.pageAlignHorizontally = true;
     this.scale.pageAlignVertically = true;
+
+    this.PLAYER_SPEED = 500;
+    this.BULLET_SPEED = -1000;
   },
 
   preload: function(){
@@ -20,9 +23,26 @@ SaveTheDate.GameState = {
   create: function(){
     this.background = this.add.tileSprite(0,0, this.game.world.width, this.game.world.height, 'background');
     this.background.autoScroll(30, 0);
-  },
 
+
+    //player
+    this.player = this.add.sprite(this.game.world.width * .15, this.game.world.centerY, 'sarah');
+    this.player.anchor.setTo(0.5);
+    this.game.physics.arcade.enable(this.player);
+    this.player.body.collideWorldBounds = true;
+    //     this.player.anchor.setTo(0.5);
+    //     this.game.physics.arcade.enable(this.player);
+    //     this.player.body.collideWorldBounds = true;
+  },
   update: function(){
+    this.player.body.velocity.y = 0;
+    if(this.game.input.activePointer.isDown){
+      var targetY = this.game.input.activePointer.position.y;
+
+      var direction = targetY >= this.player.body.center.y ? 1 : -1;
+
+      this.player.body.velocity.y = direction * this.PLAYER_SPEED;
+    }
   }
 };
 //
