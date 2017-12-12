@@ -22,7 +22,7 @@ SaveTheDate.GameState = {
 
   create: function(){
     this.background = this.add.tileSprite(0,0, this.game.world.width, this.game.world.height, 'background');
-    this.background.autoScroll(30, 0);
+    this.background.autoScroll(-30, 0);
 
 
     //player
