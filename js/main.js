@@ -1,6 +1,15 @@
 //create game
-var game = new Phaser.Game(640, 360, Phaser.AUTO);
+var SaveTheDate = SaveTheDate || {};
+SaveTheDate.game = new Phaser.Game('100%', '100%', Phaser.AUTO);
+
+SaveTheDate.game.state.add('GameState', SaveTheDate.GameState);
+SaveTheDate.game.state.start('GameState');
 
 
-game.state.add('GameState', GameState);
-game.state.start('GameState');
+// var SpaceHipster = SpaceHipster || {};
+//
+// //initiate the Phaser framework
+// SpaceHipster.game = new Phaser.Game('100%', '100%', Phaser.AUTO);
+//
+// SpaceHipster.game.state.add('GameState', SpaceHipster.GameState);
+// SpaceHipster.game.state.start('GameState');
