@@ -11,18 +11,20 @@ SaveTheDate.GameState = {
 
     this.PLAYER_SPEED = 500;
     this.BULLET_SPEED = -1000;
+    this.UHAUL_SPEED = -200;
   },
 
   preload: function(){
-    this.load.image('background', 'assets/images/background.png');
+    this.load.image('background', 'assets/images/ugly_stage.png');
     this.load.image('sarah', 'assets/images/sarah.png');
     this.load.image('jason', 'assets/images/jason.png');
     this.load.image('testgirl', 'assets/images/testgirl.png');
+    this.load.image('uhaul', 'assets/images/uhaul.png');
   },
 
   create: function(){
     this.background = this.add.tileSprite(0,0, this.game.world.width, this.game.world.height, 'background');
-    this.background.autoScroll(-30, 0);
+    this.background.autoScroll(-100, 0);
 
 
     //player
@@ -32,10 +34,11 @@ SaveTheDate.GameState = {
     this.player.scale.y = 0.5;
     this.game.physics.arcade.enable(this.player);
     this.player.body.collideWorldBounds = true;
-    //     this.player.anchor.setTo(0.5);
-    //     this.game.physics.arcade.enable(this.player);
-    //     this.player.body.collideWorldBounds = true;
+
+    this.createEnemy('uhaul');
+    // this.game.time.events.loop(20000, this.createEnemy('uhaul'));
   },
+
   update: function(){
     this.player.body.velocity.x = 0;
     this.player.body.velocity.y = 0;
@@ -61,6 +64,21 @@ SaveTheDate.GameState = {
     if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) { this.player.body.velocity.x = 1 * this.PLAYER_SPEED }
     if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) { this.player.body.velocity.y = -1 * this.PLAYER_SPEED }
     if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) { this.player.body.velocity.y = 1 * this.PLAYER_SPEED }
+  },
+
+  //create enemy
+  createEnemy: function(type) {
+    let sprite;
+    //random y position:
+    let randY = Math.floor(Math.random() * this.game.world.height);
+    if(type === 'uhaul') {
+      this.sprite = this.add.sprite(this.game.world.width, randY, 'uhaul');
+      this.sprite.anchor.setTo(0.5);
+      this.sprite.scale.x = -0.7;
+      this.sprite.scale.y = 0.7;
+      this.game.physics.arcade.enable(this.sprite);
+      this.sprite.body.velocity.x = this.UHAUL_SPEED;
+    }
   }
 };
 //

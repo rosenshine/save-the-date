@@ -1,6 +1,6 @@
 //create game
 var SaveTheDate = SaveTheDate || {};
-SaveTheDate.game = new Phaser.Game('100%', '100%', Phaser.AUTO);
+SaveTheDate.game = new Phaser.Game(1600, 900, Phaser.AUTO);
 
 SaveTheDate.game.state.add('GameState', SaveTheDate.GameState);
 SaveTheDate.game.state.start('GameState');
