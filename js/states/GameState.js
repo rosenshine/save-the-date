@@ -1,28 +1,12 @@
 var SaveTheDate = SaveTheDate || {};
 
 SaveTheDate.GameState = {
-  //initiate some game-level settings
-  init: function(){
-    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    this.scale.pageAlignHorizontally = true;
-    this.scale.pageAlignVertically = true;
-
+  create: function() {
     this.PLAYER_SPEED = 500;
     this.BULLET_SPEED = -1000;
     this.UHAUL_SPEED = -200;
-  },
 
-  preload: function(){
-    this.load.image('background', 'assets/images/ugly_stage.png');
-    this.load.image('sarah', 'assets/images/sarah.png');
-    this.load.image('jason', 'assets/images/jason.png');
-    this.load.image('testgirl', 'assets/images/testgirl.png');
-    this.load.image('uhaul', 'assets/images/uhaul.png');
-  },
-
-  create: function(){
     this.background = this.add.tileSprite(0,0, this.game.world.width, this.game.world.height, 'background');
     this.background.autoScroll(-100, 0);
 
