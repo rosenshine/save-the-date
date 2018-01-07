@@ -8,10 +8,14 @@ SaveTheDate.GameState = {
     this.UHAUL_SPEED = -200;
     this.BACKGROUND_SPEED = -100;
 
-    this.background = this.add.tileSprite(0,0, this.game.world.width, this.game.world.height, 'background');
 
+    this.background = this.add.tileSprite(0,0, this.game.world.width, this.game.world.height, 'background');
     this.background.autoScroll(this.BACKGROUND_SPEED, 0);
 
+    // set the score
+    this.score = 0;
+    var style = { font: '60px "Press Start 2P"', fill: "#000" };
+    this.scoreText = this.game.add.text(50, 50, "Score:" + this.score, style);
 
     //player
     this.player = this.add.sprite(this.game.world.width * .15, this.game.world.centerY, 'sarah');
@@ -54,7 +58,13 @@ SaveTheDate.GameState = {
       let yDiff = targetY > playerY ? targetY - playerY : playerY - targetY;
       var directionY = targetY >= this.player.body.center.y ? 1 : -1;
       if (yDiff > 25){
-        this.player.body.velocity.y = directionY * this.PLAYER_SPEED;
+        // set bounds so player does not walk off ground
+        if (directionY === -1 && this.player.body.bottom > 410){
+          this.player.body.velocity.y = directionY * this.PLAYER_SPEED;
+        }
+        else if (directionY === 1){
+          this.player.body.velocity.y = directionY * this.PLAYER_SPEED;
+        }
       }
     }
     if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) { this.player.body.velocity.x = -1 * this.PLAYER_SPEED }
@@ -64,6 +74,12 @@ SaveTheDate.GameState = {
 
     // check for overlap between fireballs and enemies
     this.game.physics.arcade.overlap(this.playerFireballs, this.enemies, this.damageEnemy, null, this);
+
+    // check for overlap between player and hearts
+    this.game.physics.arcade.overlap(this.player, this.hearts, this.collectHeart, null, this);
+
+    // check for overlap between enemies and player
+
   },
 
   //create enemy
@@ -132,6 +148,12 @@ SaveTheDate.GameState = {
 
     // set velocity
     heart.body.velocity.x = this.BACKGROUND_SPEED;
+  },
+
+  collectHeart: function(player, heart) {
+    heart.damage(1);
+    this.score += 100;
+    this.scoreText.text = "Score:" + this.score;
   }
 
 };
