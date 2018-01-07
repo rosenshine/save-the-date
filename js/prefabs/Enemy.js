@@ -29,7 +29,7 @@ SaveTheDate.Enemy.prototype.damage = function(amount) {
 
     // create heart
     SaveTheDate.GameState.createHeart(this.x, this.y);
-  
+
   }
 
   setTimeout(() => {

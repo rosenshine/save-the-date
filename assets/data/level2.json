@@ -1,0 +1,66 @@
+{
+  "duration": 20,
+  "enemies":
+  [
+    {
+      "time": 1,
+      "health": 2,
+      "speedX": 200,
+      "key": "box"
+    },
+    {
+      "time": 2,
+      "health": 3,
+      "speedX": 300,
+      "key": "box"
+    },
+    {
+      "time": 3,
+      "health": 4,
+      "speedX": 400,
+      "key": "box"
+    },
+    {
+      "time": 4,
+      "health": 4,
+      "speedX": 200,
+      "key": "box"
+    },
+    {
+      "time": 5,
+      "health": 5,
+      "speedX": 300,
+      "key": "box"
+    },
+    {
+      "time": 6,
+      "health": 3,
+      "speedX": 400,
+      "key": "box"
+    },
+    {
+      "time": 7,
+      "health": 4,
+      "speedX": 200,
+      "key": "box"
+    },
+    {
+      "time": 8,
+      "health": 4,
+      "speedX": 300,
+      "key": "box"
+    },
+    {
+      "time": 9,
+      "health": 5,
+      "speedX": 400,
+      "key": "box"
+    },
+    {
+      "time": 10,
+      "health": 6,
+      "speedX": 400,
+      "key": "box"
+    }
+  ]
+}

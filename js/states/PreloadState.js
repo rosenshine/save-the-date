@@ -21,13 +21,20 @@ SaveTheDate.PreloadState = {
     this.load.image('enemyParticle', 'assets/images/enemyParticle.png');
     this.load.spritesheet('heart','assets/images/heart.png', 240, 224, 3, 0, 0);
     this.load.spritesheet('box','assets/images/box.png', 150, 150, 6, 0, 0);
+    this.load.spritesheet('gavel','assets/images/gavel.png', 173, 150, 6, 0, 0);
+    this.load.spritesheet('tooth','assets/images/tooth.png', 141, 150, 6, 0, 0);
     this.load.spritesheet('fireball', 'assets/images/fireball.png', 40, 40, 4, 0, 0);
+
+    this.load.audio('orchestra', ['assets/audio/JPEinstrumental.mp3', 'assets/audio/JPEinstrumental.ogg']);
+
+    //load level data
+    this.load.text('level1', 'assets/data/level1.json');
+    this.load.text('level2', 'assets/data/level2.json');
+    this.load.text('level3', 'assets/data/level3.json');
   },
 
   create: function() {
-    setTimeout(() => {
-      this.state.start('HomeState');
-    }, 1500);
+    this.state.start('HomeState');
   }
 
 };

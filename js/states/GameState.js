@@ -28,8 +28,6 @@ SaveTheDate.GameState = {
     // this.createEnemy('uhaul');
     // this.game.time.events.loop(20000, this.createEnemy('uhaul'));
 
-    this.initEnemies();
-
     // create fireballs
     this.initFireballs();
     this.shootingTimer = this.game.time.events.loop(Phaser.Timer.SECOND,
@@ -38,6 +36,16 @@ SaveTheDate.GameState = {
     // create hearts
     this.hearts = this.add.group();
     this.hearts.enableBody = true;
+
+    // start awesome music
+    this.orchestra = this.add.audio('orchestra');
+    this.orchestra.play();
+
+    // set up level
+    this.initEnemies();
+    this.numLevels = 3;
+    this.currentLevel = 1;
+    this.loadLevel();
   },
 
   update: function(){
@@ -82,29 +90,9 @@ SaveTheDate.GameState = {
 
   },
 
-  //create enemy
-  createEnemy: function(type) {
-    let sprite;
-    //random y position:
-    let randY = Math.floor(Math.random() * this.game.world.height);
-    if(type === 'uhaul') {
-      this.sprite = this.add.sprite(this.game.world.width, randY, 'uhaul');
-      this.sprite.anchor.setTo(0.5);
-      this.sprite.scale.x = -0.7;
-      this.sprite.scale.y = 0.7;
-      this.game.physics.arcade.enable(this.sprite);
-      this.sprite.body.velocity.x = this.UHAUL_SPEED;
-    }
-  },
-
   initEnemies: function() {
     this.enemies = this.add.group();
     this.enemies.enableBody = true;
-
-    var enemy = new SaveTheDate.Enemy(this.game, this.game.world.width, this.game.world.height/2, 'box', 5, []);
-    this.enemies.add(enemy);
-
-    enemy.body.velocity.x = this.UHAUL_SPEED;
   },
 
   damageEnemy: function(fireball, enemy) {
@@ -154,6 +142,50 @@ SaveTheDate.GameState = {
     heart.damage(1);
     this.score += 100;
     this.scoreText.text = "Score:" + this.score;
-  }
+  },
+
+  loadLevel: function(){
+
+    if(this.currentLevel > this.numLevels){
+      this.game.state.start('GameOverState', true, false, this.score);
+    }
+    else {
+      this.currentEnemyIndex = 0;
+      this.levelData = JSON.parse(this.game.cache.getText('level' + this.currentLevel));
+
+      this.scheduleNextEnemy();
+    }
+  },
+
+  //create enemy
+  createEnemy: function(health, type, speed) {
+    let sprite;
+    // find random valid y
+    let randY = Math.floor(Math.random()*490) + 335;
+
+    var enemy = new SaveTheDate.Enemy(this.game, this.game.world.width, randY, type, health);
+    this.enemies.add(enemy);
+
+    enemy.body.velocity.x = speed * (-.4 * this.currentLevel);
+  },
+
+  scheduleNextEnemy: function(){
+    var nextEnemy = this.levelData.enemies[this.currentEnemyIndex];
+
+    if(nextEnemy){
+      var nextTime = 1500 * (nextEnemy.time - (this.currentEnemyIndex == 0 ? 0 : this.levelData.enemies[this.currentEnemyIndex -1].time));
+      this.nextEnemyTimer = this.game.time.events.add(nextTime, () =>{
+        this.createEnemy(nextEnemy.health, nextEnemy.key, nextEnemy.speedX);
+        this.currentEnemyIndex++;
+        this.scheduleNextEnemy();
+      });
+    }
+    else {
+      setTimeout(() =>{
+        this.currentLevel++;
+        this.loadLevel();
+      }, 4000);
+    }
+  },
 
 };
