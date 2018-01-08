@@ -20,9 +20,10 @@ SaveTheDate.PreloadState = {
     this.load.image('uhaul', 'assets/images/uhaul.png');
     this.load.image('enemyParticle', 'assets/images/enemyParticle.png');
     this.load.spritesheet('heart','assets/images/heart.png', 240, 224, 3, 0, 0);
+    this.load.spritesheet('battery','assets/images/battery.png', 50, 75, 3, 0, 0);
     this.load.spritesheet('box','assets/images/box.png', 150, 150, 6, 0, 0);
-    this.load.spritesheet('gavel','assets/images/gavel.png', 173, 150, 6, 0, 0);
-    this.load.spritesheet('tooth','assets/images/tooth.png', 141, 150, 6, 0, 0);
+    this.load.spritesheet('gavel','assets/images/gavel.png', 180, 150, 6, 0, 0);
+    this.load.spritesheet('tooth','assets/images/tooth.png', 150, 180, 6, 0, 0);
     this.load.spritesheet('fireball', 'assets/images/fireball.png', 40, 40, 4, 0, 0);
 
     this.load.audio('orchestra', ['assets/audio/JPEinstrumental.mp3', 'assets/audio/JPEinstrumental.ogg']);

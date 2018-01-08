@@ -16,6 +16,18 @@ SaveTheDate.GameState = {
     this.score = 0;
     var style = { font: '60px "Press Start 2P"', fill: "#000" };
     this.scoreText = this.game.add.text(50, 50, "Score:" + this.score, style);
+    this.energyText = this.game.add.text(50, 150, "Energy:", style);
+
+    // set player energy
+    this.energy = 3;
+    this.batteries = this.add.group();
+    this.battery1 = new SaveTheDate.Battery(this.game, 485, 175, 1);
+    this.battery2 = new SaveTheDate.Battery(this.game, 560, 175, 2);
+    this.battery3 = new SaveTheDate.Battery(this.game, 635, 175, 3);
+
+    this.batteries.add(this.battery1);
+    this.batteries.add(this.battery2);
+    this.batteries.add(this.battery3);
 
     //player
     this.player = this.add.sprite(this.game.world.width * .15, this.game.world.centerY, 'sarah');
@@ -24,6 +36,8 @@ SaveTheDate.GameState = {
     this.player.scale.y = 0.5;
     this.game.physics.arcade.enable(this.player);
     this.player.body.collideWorldBounds = true;
+
+    this.invincible = false;
 
     // this.createEnemy('uhaul');
     // this.game.time.events.loop(20000, this.createEnemy('uhaul'));
@@ -77,7 +91,9 @@ SaveTheDate.GameState = {
     }
     if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) { this.player.body.velocity.x = -1 * this.PLAYER_SPEED }
     if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) { this.player.body.velocity.x = 1 * this.PLAYER_SPEED }
-    if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) { this.player.body.velocity.y = -1 * this.PLAYER_SPEED }
+    if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP) && this.player.body.bottom > 410) {
+      this.player.body.velocity.y = -1 * this.PLAYER_SPEED
+    }
     if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) { this.player.body.velocity.y = 1 * this.PLAYER_SPEED }
 
     // check for overlap between fireballs and enemies
@@ -87,6 +103,7 @@ SaveTheDate.GameState = {
     this.game.physics.arcade.overlap(this.player, this.hearts, this.collectHeart, null, this);
 
     // check for overlap between enemies and player
+    this.game.physics.arcade.overlap(this.player, this.enemies, this.damagePlayer, null, this);
 
   },
 
@@ -98,6 +115,29 @@ SaveTheDate.GameState = {
   damageEnemy: function(fireball, enemy) {
     enemy.damage(1);
     fireball.kill();
+  },
+
+  damagePlayer: function(player, enemy) {
+    let yDiff = Math.abs(player.body.center.y - enemy.body.center.y);
+    let xDiff = Math.abs(player.body.center.x - enemy.body.center.x);
+    if (!this.invincible && yDiff < 80 && xDiff < 80) {
+      if (this.energy === 3) {
+        this.battery3.kill();
+      } else if (this.energy === 2) {
+        this.battery2.kill();
+      } else if (this.energy === 1) {
+        this.battery1.kill();
+      }
+      this.energy -= 1;
+      this.invincible = true;
+      setTimeout(() => {
+        this.invincible = false;
+      }, 2000);
+      if (this.energy === 0){
+        // game over
+        console.log('game over!');
+      }
+    }
   },
 
   initFireballs: function() {
