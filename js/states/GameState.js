@@ -136,6 +136,12 @@ SaveTheDate.GameState = {
       if (this.energy === 0){
         // game over
         console.log('game over!');
+        this.game.paused = true;
+        setTimeout(() => {
+          this.game.paused = false;
+          this.state.start('ResultState');
+          this.orchestra.stop();
+        }, 1000);
       }
     }
   },

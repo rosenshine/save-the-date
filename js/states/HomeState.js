@@ -10,6 +10,6 @@ SaveTheDate.HomeState = {
     }, this);
 
     var style = { font: '35px Arial', fill: '#fff' };
-    this.game.add.text(30, this.game.world.centerY + 200, 'TOUCH TO START', style);
+    this.game.add.text(30, this.game.world.centerY + 200, 'CLICK TO START', style);
   }
 };

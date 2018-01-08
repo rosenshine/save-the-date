@@ -18,6 +18,7 @@ SaveTheDate.PreloadState = {
     this.load.image('jason', 'assets/images/jason.png');
     this.load.image('testgirl', 'assets/images/testgirl.png');
     this.load.image('uhaul', 'assets/images/uhaul.png');
+    this.load.image('replay', 'assets/images/replay.png');
     this.load.image('enemyParticle', 'assets/images/enemyParticle.png');
     this.load.spritesheet('heart','assets/images/heart.png', 240, 224, 3, 0, 0);
     this.load.spritesheet('battery','assets/images/battery.png', 50, 75, 3, 0, 0);
@@ -27,6 +28,7 @@ SaveTheDate.PreloadState = {
     this.load.spritesheet('fireball', 'assets/images/fireball.png', 40, 40, 4, 0, 0);
 
     this.load.audio('orchestra', ['assets/audio/JPEinstrumental.mp3', 'assets/audio/JPEinstrumental.ogg']);
+    this.load.audio('highScore', ['assets/audio/high_score.wav']);
 
     //load level data
     this.load.text('level1', 'assets/data/level1.json');
