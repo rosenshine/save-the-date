@@ -4,7 +4,7 @@ SaveTheDate.GameState = {
 
   create: function() {
     this.PLAYER_SPEED = 500;
-    this.FIREBALL_SPEED = 1000;
+    this.FIREBALL_SPEED = 2000;
     this.UHAUL_SPEED = -200;
     this.BACKGROUND_SPEED = -100;
 
@@ -39,13 +39,13 @@ SaveTheDate.GameState = {
 
     this.invincible = false;
 
-    // this.createEnemy('uhaul');
-    // this.game.time.events.loop(20000, this.createEnemy('uhaul'));
-
-    // create fireballs
+    // create fireball pool
     this.initFireballs();
-    this.shootingTimer = this.game.time.events.loop(Phaser.Timer.SECOND,
-      this.createPlayerFireball, this);
+    // this.shootingTimer = this.game.time.events.loop(Phaser.Timer.SECOND,
+    //   this.createPlayerFireball, this);
+
+    // track 2 fireballs per second
+    this.fireballShot = false;
 
     // create hearts
     this.hearts = this.add.group();
@@ -57,44 +57,70 @@ SaveTheDate.GameState = {
 
     // set up level
     this.initEnemies();
-    this.numLevels = 3;
+    this.numLevels = 4;
     this.currentLevel = 1;
     this.loadLevel();
+
+    // add fireball button
+    this.pewButton = this.add.sprite(this.game.world.width - 225, this.game.world.height -125, 'pew');
   },
 
   update: function(){
+    // player movement
     this.player.body.velocity.x = 0;
     this.player.body.velocity.y = 0;
+
+    // player movment with cursor
     if(this.game.input.activePointer.isDown){
-      //X
-      var targetX = this.game.input.activePointer.position.x;
-      let playerX = this.player.body.center.x;
-      let xDiff = targetX > playerX ? targetX - playerX : playerX - targetX;
-      var directionX = targetX >= this.player.body.center.x ? 1 : -1;
-      if (xDiff > 25) {
-        this.player.body.velocity.x = directionX * this.PLAYER_SPEED;
-      }
-      //Y
-      var targetY = this.game.input.activePointer.position.y;
-      let playerY = this.player.body.center.y;
-      let yDiff = targetY > playerY ? targetY - playerY : playerY - targetY;
-      var directionY = targetY >= this.player.body.center.y ? 1 : -1;
-      if (yDiff > 25){
-        // set bounds so player does not walk off ground
-        if (directionY === -1 && this.player.body.bottom > 410){
-          this.player.body.velocity.y = directionY * this.PLAYER_SPEED;
+      // check if pointer is over fireball button
+      let targetX = this.game.input.activePointer.position.x;
+      let targetY = this.game.input.activePointer.position.y;
+      const buttonMinX = this.game.world.width - 225;
+      const buttonMaxX = this.game.world.width - 25;
+      const buttonMinY = this.game.world.height - 125;
+      const buttonMaxY = this.game.world.height - 25;
+
+      let isOverFireballButton = targetX >= buttonMinX && targetX <= buttonMaxX && targetY >= buttonMinY && targetY <= buttonMaxY;
+      if (isOverFireballButton) {
+        this.createPlayerFireball();
+      } else { //if not over fireball button, move player
+        //X
+        let playerX = this.player.body.center.x;
+        let xDiff = targetX > playerX ? targetX - playerX : playerX - targetX;
+        var directionX = targetX >= this.player.body.center.x ? 1 : -1;
+        if (xDiff > 25) {
+          this.player.body.velocity.x = directionX * this.PLAYER_SPEED;
         }
-        else if (directionY === 1){
-          this.player.body.velocity.y = directionY * this.PLAYER_SPEED;
+        //Y
+        let playerY = this.player.body.center.y;
+        let yDiff = targetY > playerY ? targetY - playerY : playerY - targetY;
+        var directionY = targetY >= this.player.body.center.y ? 1 : -1;
+        if (yDiff > 25){
+          // set bounds so player does not walk off ground
+          if (directionY === -1 && this.player.body.bottom > 410){
+            this.player.body.velocity.y = directionY * this.PLAYER_SPEED;
+          }
+          else if (directionY === 1){
+            this.player.body.velocity.y = directionY * this.PLAYER_SPEED;
+          }
         }
       }
     }
+
+    // player movement with keyboard
     if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) { this.player.body.velocity.x = -1 * this.PLAYER_SPEED }
     if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) { this.player.body.velocity.x = 1 * this.PLAYER_SPEED }
     if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP) && this.player.body.bottom > 410) {
       this.player.body.velocity.y = -1 * this.PLAYER_SPEED
     }
     if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) { this.player.body.velocity.y = 1 * this.PLAYER_SPEED }
+
+    // fireball with Keyboard
+
+    if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+      this.createPlayerFireball();
+    }
+
 
     // check for overlap between fireballs and enemies
     this.game.physics.arcade.overlap(this.playerFireballs, this.enemies, this.damageEnemy, null, this);
@@ -140,7 +166,6 @@ SaveTheDate.GameState = {
         setTimeout(() => {
           this.game.paused = false;
           this.state.start('ResultState');
-          this.orchestra.stop();
         }, 1000);
       }
     }
@@ -153,19 +178,26 @@ SaveTheDate.GameState = {
   },
 
   createPlayerFireball: function() {
-    var fireball = this.playerFireballs.getFirstExists(false);
+    if(!this.fireballShot) {
+      this.fireballShot = true;
+      var fireball = this.playerFireballs.getFirstExists(false);
 
-    if(!fireball) {
-      fireball = new SaveTheDate.PlayerFireball(this.game, this.player.x, this.player.y);
-      this.playerFireballs.add(fireball);
-    }
-    else {
-      // reset position
-      fireball.reset(this.player.x, this.player.y);
+      if(!fireball) {
+        fireball = new SaveTheDate.PlayerFireball(this.game, this.player.x, this.player.y);
+        this.playerFireballs.add(fireball);
+      }
+      else {
+        // reset position
+        fireball.reset(this.player.x, this.player.y);
+      }
+
+      // set velocity
+      fireball.body.velocity.x = this.FIREBALL_SPEED;
+      setTimeout(() => {
+        this.fireballShot = false;
+      }, 500);
     }
 
-    // set velocity
-    fireball.body.velocity.x = this.FIREBALL_SPEED;
   },
 
   createHeart: function(x, y) {
@@ -193,7 +225,7 @@ SaveTheDate.GameState = {
   loadLevel: function(){
 
     if(this.currentLevel > this.numLevels){
-      this.game.state.start('GameOverState', true, false, this.score);
+      this.game.state.start('ResultState', true, false, this.score);
     }
     else {
       this.currentEnemyIndex = 0;

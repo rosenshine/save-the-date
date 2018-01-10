@@ -4,6 +4,9 @@ SaveTheDate.ResultState = {
   create: function() {
     var background = this.game.add.sprite(0,0,'background');
 
+    // stop game music
+    SaveTheDate.GameState.orchestra.stop();
+
     // start awesome music
     this.scoreMusic = this.add.audio('highScore');
     this.scoreMusic.play();

@@ -20,6 +20,8 @@ SaveTheDate.PreloadState = {
     this.load.image('uhaul', 'assets/images/uhaul.png');
     this.load.image('replay', 'assets/images/replay.png');
     this.load.image('enemyParticle', 'assets/images/enemyParticle.png');
+    this.load.spritesheet('pew','assets/images/pew.png', 200, 100, 2, 0, 0);
+    this.load.spritesheet('judge','assets/images/judge.png', 310, 381, 4, 0, 0);
     this.load.spritesheet('heart','assets/images/heart.png', 240, 224, 3, 0, 0);
     this.load.spritesheet('battery','assets/images/battery.png', 50, 75, 3, 0, 0);
     this.load.spritesheet('box','assets/images/box.png', 150, 150, 6, 0, 0);
@@ -34,6 +36,7 @@ SaveTheDate.PreloadState = {
     this.load.text('level1', 'assets/data/level1.json');
     this.load.text('level2', 'assets/data/level2.json');
     this.load.text('level3', 'assets/data/level3.json');
+    this.load.text('level4', 'assets/data/level4.json');
   },
 
   create: function() {
