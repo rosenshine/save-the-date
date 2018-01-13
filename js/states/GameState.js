@@ -8,6 +8,7 @@ SaveTheDate.GameState = {
     this.UHAUL_SPEED = -200;
     this.BACKGROUND_SPEED = -100;
 
+    // this.selectedPlayer = 'sarah';
 
     this.background = this.add.tileSprite(0,0, this.game.world.width, this.game.world.height, 'background');
     this.background.autoScroll(this.BACKGROUND_SPEED, 0);
@@ -30,7 +31,7 @@ SaveTheDate.GameState = {
     this.batteries.add(this.battery3);
 
     //player
-    this.player = this.add.sprite(this.game.world.width * .15, this.game.world.centerY, 'sarah');
+    this.player = this.add.sprite(this.game.world.width * .15, this.game.world.centerY, SaveTheDate.selectedPlayer);
     this.player.anchor.setTo(0.5);
     this.player.scale.x = 0.5;
     this.player.scale.y = 0.5;
@@ -41,8 +42,6 @@ SaveTheDate.GameState = {
 
     // create fireball pool
     this.initFireballs();
-    // this.shootingTimer = this.game.time.events.loop(Phaser.Timer.SECOND,
-    //   this.createPlayerFireball, this);
 
     // track 2 fireballs per second
     this.fireballShot = false;
@@ -57,7 +56,7 @@ SaveTheDate.GameState = {
 
     // set up level
     this.initEnemies();
-    this.numLevels = 4;
+    this.numLevels = 6;
     this.currentLevel = 1;
     this.loadLevel();
 
@@ -131,11 +130,19 @@ SaveTheDate.GameState = {
     // check for overlap between enemies and player
     this.game.physics.arcade.overlap(this.player, this.enemies, this.damagePlayer, null, this);
 
+    // check for overlap between fireballs and bosses
+    this.game.physics.arcade.overlap(this.playerFireballs, this.bosses, this.damageEnemy, null, this);
+
+    // check for overlap between player and bosses
+    this.game.physics.arcade.overlap(this.player, this.bosses, this.damagePlayer, null, this);
   },
 
   initEnemies: function() {
     this.enemies = this.add.group();
     this.enemies.enableBody = true;
+
+    this.bosses = this.add.group();
+    this.bosses.enableBody = true;
   },
 
   damageEnemy: function(fireball, enemy) {
@@ -144,9 +151,11 @@ SaveTheDate.GameState = {
   },
 
   damagePlayer: function(player, enemy) {
+    let enemyType = enemy.category;
+    let spacing = enemyType === 'enemy' ? 80 : 160;
     let yDiff = Math.abs(player.body.center.y - enemy.body.center.y);
     let xDiff = Math.abs(player.body.center.x - enemy.body.center.x);
-    if (!this.invincible && yDiff < 80 && xDiff < 80) {
+    if (!this.invincible && yDiff < spacing && xDiff < spacing) {
       if (this.energy === 3) {
         this.battery3.kill();
       } else if (this.energy === 2) {
@@ -158,7 +167,7 @@ SaveTheDate.GameState = {
       this.invincible = true;
       setTimeout(() => {
         this.invincible = false;
-      }, 2000);
+      }, 25 * spacing);
       if (this.energy === 0){
         // game over
         console.log('game over!');
@@ -200,25 +209,15 @@ SaveTheDate.GameState = {
 
   },
 
-  createHeart: function(x, y) {
-    var heart = this.hearts.getFirstExists(false);
-
-    if(!heart) {
-      heart = new SaveTheDate.Heart(this.game, x, y);
-      this.hearts.add(heart);
-    }
-    else {
-      // reset position
-      heart.reset(x, y);
-    }
-
+  createHeart: function(x, y, size) {
+    var heart = new SaveTheDate.Heart(this.game, x, y, size);
+    this.hearts.add(heart);
     // set velocity
     heart.body.velocity.x = this.BACKGROUND_SPEED;
   },
 
   collectHeart: function(player, heart) {
     heart.damage(1);
-    this.score += 100;
     this.scoreText.text = "Score:" + this.score;
   },
 
@@ -230,13 +229,12 @@ SaveTheDate.GameState = {
     else {
       this.currentEnemyIndex = 0;
       this.levelData = JSON.parse(this.game.cache.getText('level' + this.currentLevel));
-
       this.scheduleNextEnemy();
     }
   },
 
   //create enemy
-  createEnemy: function(health, type, speed) {
+  createEnemy: function(type, health, speed) {
     let sprite;
     // find random valid y
     let randY = Math.floor(Math.random()*490) + 335;
@@ -247,16 +245,25 @@ SaveTheDate.GameState = {
     enemy.body.velocity.x = speed * (-.4 * this.currentLevel);
   },
 
+  createBoss: function(type) {
+    let boss = new SaveTheDate.Boss(this.game, this.game.world.width - 200, 500, type, 20);
+    this.bosses.add(boss);
+  },
+
   scheduleNextEnemy: function(){
     var nextEnemy = this.levelData.enemies[this.currentEnemyIndex];
 
     if(nextEnemy){
-      var nextTime = 1500 * (nextEnemy.time - (this.currentEnemyIndex == 0 ? 0 : this.levelData.enemies[this.currentEnemyIndex -1].time));
-      this.nextEnemyTimer = this.game.time.events.add(nextTime, () =>{
-        this.createEnemy(nextEnemy.health, nextEnemy.key, nextEnemy.speedX);
-        this.currentEnemyIndex++;
-        this.scheduleNextEnemy();
-      });
+      if(this.currentLevel % 2 === 0) { // even levels are boss levels
+        this.createBoss(nextEnemy.key);
+      } else {
+        var nextTime = 1500 * (nextEnemy.time - (this.currentEnemyIndex == 0 ? 0 : this.levelData.enemies[this.currentEnemyIndex -1].time));
+        this.nextEnemyTimer = this.game.time.events.add(nextTime, () =>{
+          this.createEnemy(nextEnemy.key, nextEnemy.health, nextEnemy.speedX);
+          this.currentEnemyIndex++;
+          this.scheduleNextEnemy();
+        });
+      }
     }
     else {
       setTimeout(() =>{

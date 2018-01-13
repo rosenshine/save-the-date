@@ -1,12 +1,12 @@
 {
-  "duration": 1,
+  "duration": 20,
   "enemies":
   [
     {
       "time": 1,
       "health": 2,
       "speedX": 200,
-      "key": "tooth"
+      "key": "gavel"
     }
   ]
 }

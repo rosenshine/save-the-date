@@ -21,3 +21,5 @@ SaveTheDate.BootState = {
     this.state.start('PreloadState');
   }
 };
+
+SaveTheDate.selectedPlayer = '';

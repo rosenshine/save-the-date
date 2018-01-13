@@ -3,6 +3,7 @@ var SaveTheDate = SaveTheDate || {};
 SaveTheDate.Enemy = function(game, x, y, type, health) {
   Phaser.Sprite.call(this, game, x, y, type);
 
+  this.category = 'enemy';
   this.anchor.setTo(0.5);
   this.checkWorldBounds = true;
   this.outOfBoundsKill = true;
@@ -28,7 +29,7 @@ SaveTheDate.Enemy.prototype.damage = function(amount) {
     emitter.start(true, 500, null, 100);
 
     // create heart
-    SaveTheDate.GameState.createHeart(this.x, this.y);
+    SaveTheDate.GameState.createHeart(this.x, this.y, 1);
 
   }
 
