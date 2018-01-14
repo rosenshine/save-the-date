@@ -31,6 +31,8 @@ SaveTheDate.PreloadState = {
     this.load.spritesheet('tooth','assets/images/tooth.png', 150, 180, 6, 0, 0);
     this.load.spritesheet('fireball', 'assets/images/fireball.png', 40, 40, 4, 0, 0);
     this.load.spritesheet('doctopus', 'assets/images/doctopus.png', 558, 600, 4, 0, 0);
+    this.load.spritesheet('floss','assets/images/floss.png', 1200, 100, 2, 0, 0);
+
 
     this.load.audio('orchestra', ['assets/audio/JPEinstrumental.mp3', 'assets/audio/JPEinstrumental.ogg']);
     this.load.audio('highScore', ['assets/audio/high_score.wav']);

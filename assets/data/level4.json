@@ -5,9 +5,7 @@
     {
       "time": 1,
       "health": 10,
-      "speedX": 100,
-      "speedY": 100,
-      "key": "uhaul"
+      "key": "doctopus"
     }
   ]
 }

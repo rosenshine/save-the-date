@@ -4,9 +4,33 @@
   [
     {
       "time": 1,
-      "health": 2,
+      "health": 1,
       "speedX": 200,
-      "key": "box"
+      "key": "tooth"
+    },
+    {
+      "time": 2,
+      "health": 2,
+      "speedX": 300,
+      "key": "tooth"
+    },
+    {
+      "time": 3,
+      "health": 3,
+      "speedX": 400,
+      "key": "tooth"
+    },
+    {
+      "time": 4,
+      "health": 4,
+      "speedX": 500,
+      "key": "tooth"
+    },
+    {
+      "time": 10,
+      "health": 5,
+      "speedX": 300,
+      "key": "tooth"
     }
   ]
 }

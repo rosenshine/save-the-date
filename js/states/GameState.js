@@ -3,7 +3,7 @@ var SaveTheDate = SaveTheDate || {};
 SaveTheDate.GameState = {
 
   create: function() {
-    this.PLAYER_SPEED = 500;
+    this.PLAYER_SPEED = 650;
     this.FIREBALL_SPEED = 2000;
     this.UHAUL_SPEED = -200;
     this.BACKGROUND_SPEED = -100;
@@ -169,10 +169,13 @@ SaveTheDate.GameState = {
   damagePlayer: function(player, enemy) {
     let enemyType = enemy.category;
     let spacing;
+    console.log(enemy);
     if(enemyType === 'enemy'){
       spacing = 80;
+    } else if(enemyType === 'bossBullet' && enemy.name === 'floss'){
+      spacing =  50;
     } else if(enemyType === 'bossBullet') {
-      spacing = 80;
+      spacing = 100;
     } else if(enemyType === 'boss') {
       spacing = 160;
     } else {
@@ -181,8 +184,10 @@ SaveTheDate.GameState = {
     let invincibleTime = enemyType === 'enemy' ? 1000 : 2000;
     let yDiff = Math.abs(player.body.center.y - enemy.body.center.y);
     let xDiff = Math.abs(player.body.center.x - enemy.body.center.x);
+    if(enemy.name === "floss"){
+      xDiff = 0;
+    }
     if (!this.invincible && yDiff < spacing && xDiff < spacing) {
-      console.log(yDiff, xDiff, spacing);
       if (this.energy === 3) {
         this.battery3.kill();
       } else if (this.energy === 2) {

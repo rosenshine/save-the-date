@@ -8,7 +8,15 @@ SaveTheDate.BossBullet = function(game, x, y, type) {
   this.checkWorldBounds = true;
   this.outOfBoundsKill = true;
   this.animations.add('spin', [0,1,2,3], 7, true);
-  this.play('spin');
+  this.animations.add('lasso', [0,1], 5, true);
+  this.name = type;
+
+  if(type === 'bossGavel'){
+    this.play('spin');
+  }
+  else if (type === 'floss'){
+    this.play('lasso');
+  }
 };
 
 SaveTheDate.BossBullet.prototype = Object.create(Phaser.Sprite.prototype);

@@ -2,13 +2,17 @@ var SaveTheDate = SaveTheDate || {};
 
 SaveTheDate.Boss = function(game, x, y, type, health) {
   Phaser.Sprite.call(this, game, x, y, type);
-
+  this.isPaused = false;
   this.category = 'boss';
+  if(type === 'doctopus'){
+    this.scale.setTo(0.8);
+  }
   this.anchor.setTo(0.5);
   this.checkWorldBounds = true;
   this.health = 20;
   this.bossType = type;
   console.log(this.bossType);
+  this.animations.add('still', [0], 1, true)
   this.animations.add('walk', [0,1], 3, true);
   this.animations.add('damaged', [2,3], 3, false);
   this.animations.add('blink', [0, 4, 0, 4], 2, false);
@@ -98,7 +102,7 @@ SaveTheDate.Boss.prototype.update = function() {
     }
   }
 
-  if(this.bossType === 'judge'  || this.bossType === 'doctopus'){
+  if(this.bossType === 'judge'){
     if(bossY < 300){
       this.body.velocity.y = 300;
     } else if(bossY > 800){
@@ -106,6 +110,18 @@ SaveTheDate.Boss.prototype.update = function() {
     }
     if(this.bossState === 'start'){
       this.gavelLoop = this.game.time.events.loop(1500, createGavel, this);
+      this.bossState = 'fire';
+    }
+  }
+
+  if(this.bossType === 'doctopus'){
+    if(bossY < 300 && !this.isPaused){
+      this.body.velocity.y = 300;
+    } else if(bossY > 800 && !this.isPaused){
+      this.body.velocity.y = -300;
+    }
+    if(this.bossState === 'start'){
+      this.gavelLoop = this.game.time.events.loop(4000, createFloss, this);
       this.bossState = 'fire';
     }
   }
@@ -118,4 +134,18 @@ let createGavel = function() {
   let degrees = radians * (180/Math.PI);
   let speed = ((20 - this.health) * -50) + -800;
   this.game.physics.arcade.velocityFromAngle(degrees, speed, gavel.body.velocity);
+};
+
+let createFloss = function() {
+  let floss = new SaveTheDate.BossBullet(this.game, this.x - 770, this.y - 35, 'floss');
+  this.isPaused = true;
+  this.body.velocity.y = 0;
+  SaveTheDate.GameState.bossBullets.add(floss);
+  this.play('still');
+  setTimeout(() => {
+    this.isPaused = false;
+    Math.floor(Math.random() * 2) === 0 ? this.body.velocity.y = -300 : this.body.velocity.y = 300;
+    SaveTheDate.GameState.bossBullets.remove(floss);
+    this.play('walk');
+  }, 2000)
 };
