@@ -12,7 +12,7 @@ SaveTheDate.HomeState = {
     sarah.inputEnabled = true;
     sarah.events.onInputDown.add(function() {
       SaveTheDate.selectedPlayer = 'sarah';
-      this.state.start('GameState');
+      this.state.start('SetupState');
     }, this);
 
     let jason = this.game.add.sprite(this.game.world.centerX + 150, this.game.world.centerY, 'jason');
@@ -23,7 +23,7 @@ SaveTheDate.HomeState = {
     jason.inputEnabled = true;
     jason.events.onInputDown.add(function() {
       SaveTheDate.selectedPlayer = 'jason';
-      this.state.start('GameState');
+      this.state.start('SetupState');
     }, this);
 
     let style = { font: '35px Arial', fill: '#fff' };

@@ -14,7 +14,8 @@ SaveTheDate.PreloadState = {
 
 
     this.load.image('background', 'assets/images/background.png');
-    this.load.image('sarah', 'assets/images/sarah.png');
+    this.load.image('living_room', 'assets/images/living_room.png');
+    this.load.spritesheet('sarah', 'assets/images/sarah.png', 240, 318, 6, 0, 0);
     this.load.image('jason', 'assets/images/jason.png');
     this.load.image('testgirl', 'assets/images/testgirl.png');
     this.load.image('replay', 'assets/images/replay.png');
@@ -26,8 +27,10 @@ SaveTheDate.PreloadState = {
     this.load.spritesheet('battery','assets/images/battery.png', 50, 75, 3, 0, 0);
     this.load.spritesheet('box','assets/images/box.png', 150, 150, 6, 0, 0);
     this.load.spritesheet('gavel','assets/images/gavel.png', 180, 150, 6, 0, 0);
+    this.load.spritesheet('bossGavel','assets/images/bossGavel.png', 180, 180, 4, 0, 0);
     this.load.spritesheet('tooth','assets/images/tooth.png', 150, 180, 6, 0, 0);
     this.load.spritesheet('fireball', 'assets/images/fireball.png', 40, 40, 4, 0, 0);
+    this.load.spritesheet('doctopus', 'assets/images/doctopus.png', 558, 600, 4, 0, 0);
 
     this.load.audio('orchestra', ['assets/audio/JPEinstrumental.mp3', 'assets/audio/JPEinstrumental.ogg']);
     this.load.audio('highScore', ['assets/audio/high_score.wav']);

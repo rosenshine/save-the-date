@@ -32,6 +32,8 @@ SaveTheDate.GameState = {
 
     //player
     this.player = this.add.sprite(this.game.world.width * .15, this.game.world.centerY, SaveTheDate.selectedPlayer);
+    this.player.animations.add('walk', [1, 2, 3, 4, 5], 8, true);
+    this.player.play('walk');
     this.player.anchor.setTo(0.5);
     this.player.scale.x = 0.5;
     this.player.scale.y = 0.5;
@@ -49,6 +51,10 @@ SaveTheDate.GameState = {
     // create hearts
     this.hearts = this.add.group();
     this.hearts.enableBody = true;
+
+    // create boss bullets
+    this.bossBullets = this.add.group();
+    this.bossBullets.enableBody = true;
 
     // start awesome music
     this.orchestra = this.add.audio('orchestra');
@@ -135,6 +141,16 @@ SaveTheDate.GameState = {
 
     // check for overlap between player and bosses
     this.game.physics.arcade.overlap(this.player, this.bosses, this.damagePlayer, null, this);
+
+    // check for overlap between player and bossBullets
+    this.game.physics.arcade.overlap(this.player, this.bossBullets, this.damagePlayer, null, this);
+
+    // flash player when damaged
+    if (this.invincible) {
+      this.player.alpha = 0.5;
+    } else {
+      this.player.alpha = 1;
+    }
   },
 
   initEnemies: function() {
@@ -152,10 +168,21 @@ SaveTheDate.GameState = {
 
   damagePlayer: function(player, enemy) {
     let enemyType = enemy.category;
-    let spacing = enemyType === 'enemy' ? 80 : 160;
+    let spacing;
+    if(enemyType === 'enemy'){
+      spacing = 80;
+    } else if(enemyType === 'bossBullet') {
+      spacing = 80;
+    } else if(enemyType === 'boss') {
+      spacing = 160;
+    } else {
+      spacing = 0;
+    }
+    let invincibleTime = enemyType === 'enemy' ? 1000 : 2000;
     let yDiff = Math.abs(player.body.center.y - enemy.body.center.y);
     let xDiff = Math.abs(player.body.center.x - enemy.body.center.x);
     if (!this.invincible && yDiff < spacing && xDiff < spacing) {
+      console.log(yDiff, xDiff, spacing);
       if (this.energy === 3) {
         this.battery3.kill();
       } else if (this.energy === 2) {
@@ -167,7 +194,7 @@ SaveTheDate.GameState = {
       this.invincible = true;
       setTimeout(() => {
         this.invincible = false;
-      }, 25 * spacing);
+      }, invincibleTime);
       if (this.energy === 0){
         // game over
         console.log('game over!');
